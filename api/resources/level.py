@@ -11,8 +11,11 @@ blp = Blueprint("level", __name__, description="Operations on Levels")
 class LevelList(MethodView):
     @blp.arguments(LevelSchema)
     @blp.response(201, LevelSchema)
-    # @jwt_required()
+    @jwt_required()
     def post(self, new_data):
+        if get_jwt()["is_admin"] == False:
+            abort(401, message="You are not authorized to create a new level")
+        
         """Create a new level"""
         if LevelModel.query.filter(
             LevelModel.name == new_data["name"]
