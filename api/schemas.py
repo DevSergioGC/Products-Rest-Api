@@ -7,11 +7,10 @@ class PlainProductSchema(Schema):
     description = fields.Str()
     price = fields.Float(required=True)
 
-class PlainUserSchema(Schema):
+class UserSchema(Schema):
     id = fields.Int(dump_only=True)
     username = fields.Str(required=True)
     password = fields.Str(required=True)
-    email = fields.Str(required=True)
 
 class LevelSchema(Schema):
     id = fields.Int(dump_only=True)
@@ -19,11 +18,7 @@ class LevelSchema(Schema):
 
 class ProductSchema(PlainProductSchema):
     user_id = fields.Int(required=True)
-    user = fields.Nested(PlainUserSchema, dump_only=True, many=True)
-
-class UserSchema(PlainUserSchema):
-    level_id = fields.Int(required=True)
-    level = fields.Nested(LevelSchema, dump_only=True)
+    user = fields.Nested(UserSchema, dump_only=True, many=True)
 
 class ProductsUserSchema(Schema):
     products = fields.Nested(ProductSchema, dump_only=True, many=True)
@@ -32,3 +27,8 @@ class ProductsUserSchema(Schema):
 class RevokedJWTSchema(Schema):
     id = fields.Int(dump_only=True)
     token = fields.Str(required=True)
+
+class UserRegisterSchema(UserSchema):
+    email = fields.Str(required=True)
+    level_id = fields.Int(required=True)
+    level = fields.Nested(LevelSchema, dump_only=True)
