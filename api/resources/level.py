@@ -3,6 +3,7 @@ from flask_smorest import Blueprint, abort
 from api.schemas import LevelSchema
 from flask_jwt_extended import get_jwt, jwt_required, get_jwt_identity
 from api.models import LevelModel
+from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 
 blp = Blueprint("level", __name__, description="Operations on Levels")
 
@@ -21,10 +22,17 @@ class LevelList(MethodView):
         level = LevelModel(
             name = new_data["name"],
         )
-        level.save_to_db()
         
-        return {"message": "Level created successfully"}, 201
+        try:
+            level.save_to_db()
+        except IntegrityError:
+            abort(409, message="Level already exists")
+        except SQLAlchemyError:
+            abort(500, message="Something went wrong while inserting the level")
+        
+        return level, 201
     
+    @blp.response(200, LevelSchema(many=True))
     def get(self):
         """Get all levels"""
         return LevelModel.query.all()
