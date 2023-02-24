@@ -8,16 +8,7 @@ class UserModel(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
     level_id = db.Column(db.Integer, db.ForeignKey("levels.id"), nullable=False, unique=True)
-    products = db.relationship('ProductModel', back_populates='users', secondary='product_user')
-    
-    def __init__(self, username, password, email, level):
-        self.username = username
-        self.password = password
-        self.email = email
-        self.level = level
-    
-    def json(self):
-        return {'username': self.username, 'email': self.email, 'level': self.level}
+    products = db.relationship('ProductModel', back_populates='users', secondary='product_user')    
     
     @classmethod
     def find_by_username(cls, id):

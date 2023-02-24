@@ -6,12 +6,6 @@ class RevokedJWTModel (db.Model):
     id = db.Column(db.Integer, primary_key=True)
     jti = db.Column(db.String(180), unique=True, nullable=False)    
     
-    def __init__(self, jti):
-        self.jti = jti        
-    
-    def json(self):
-        return {'jti': self.jti}
-    
     @classmethod
     def find_by_jti(cls, jti):
         return cls.query.filter_by(jti=jti).first()
