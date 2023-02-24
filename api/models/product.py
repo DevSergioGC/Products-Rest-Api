@@ -8,7 +8,7 @@ class ProductModel(db.Model):
     url_img = db.Column(db.String(250))
     description = db.Column(db.String(250))
     price = db.Column(db.Float(precision=2), nullable=False)
-    users = db.relationship('UserModel', secondary='products_users', back_populates='products')
+    users = db.relationship('UserModel', secondary='product_user', back_populates='products')
     
     def __init__(self, name, price, description, url_img):
         self.name = name
