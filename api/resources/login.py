@@ -5,7 +5,7 @@ from passlib.hash import pbkdf2_sha256 as hasher
 from flask_jwt_extended import create_access_token, get_jwt, jwt_required, create_refresh_token, get_jwt_identity
 import datetime
 from sqlalchemy import or_
-from api.models import UserModel, JWTModel
+from api.models import UserModel, RevokedJWTModel
 
 blp = Blueprint("login", __name__, description="Operations on Login/Logout/Register")
 
@@ -60,7 +60,7 @@ class TokenRefresh(MethodView):
         """Refresh a token"""
         current_user = get_jwt_identity()
         new_token = create_access_token(identity=current_user, fresh=False)
-        jti = JWTModel(jti=get_jwt()["jti"])
+        jti = RevokedJWTModel(jti=get_jwt()["jti"])
         jti.save_to_db()
         
         return {"access_token": new_token}, 200      
@@ -70,7 +70,7 @@ class UserLogout(MethodView):
     @jwt_required()
     def post(self):
         """Logout a user"""
-        jti = JWTModel(jti=get_jwt()["jti"])
+        jti = RevokedJWTModel(jti=get_jwt()["jti"])
         jti.save_to_db()
         
         return {"message": "Successfully logged out"}, 200
