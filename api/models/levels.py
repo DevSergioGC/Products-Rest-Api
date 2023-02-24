@@ -5,14 +5,7 @@ class LevelModel(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=True, nullable=False)   
-    user = db.relationship('UserModel', lazy='dynamic', backref='level')
-    
-    def __init__(self, name, id):
-        self.id = id
-        self.name = name        
-    
-    def json(self):
-        return {'ID': self.id, 'name': self.name}
+    user = db.relationship('UserModel', lazy='dynamic', backref='level')     
     
     @classmethod
     def find_by_id(cls, id):
