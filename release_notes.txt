@@ -1,0 +1,11 @@
+#Path 0.1 
+
+##Features
+
+-flask app running
+-swagger-ui with all the end-points
+-schema documentation
+
+##Notes
+
+-problems creating a new level
