@@ -1,6 +1,6 @@
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
-from api.schemas import UserSchema
+from api.schemas import UserSchema, UserRegisterSchema
 from passlib.hash import pbkdf2_sha256 as hasher
 from flask_jwt_extended import create_access_token, get_jwt, jwt_required, create_refresh_token, get_jwt_identity
 import datetime
@@ -11,8 +11,7 @@ blp = Blueprint("login", __name__, description="Operations on Login/Logout/Regis
 
 @blp.route("/register")
 class UserList(MethodView):
-    @blp.arguments(UserSchema)
-    @blp.response(201, UserSchema)
+    @blp.arguments(UserRegisterSchema)    
     def post(self, new_data):
         """Create a new user"""
         if UserModel.query.filter(
@@ -31,12 +30,14 @@ class UserList(MethodView):
         )
         user.save_to_db()
         
-        return {"message": "User created successfully"}, 201
+        return {
+            "message": "User created successfully",
+            "user": user.username,   
+        }, 201
 
 @blp.route("/login")
 class UserLogin(MethodView):
-    @blp.arguments(UserSchema)
-    # @blp.response(200, UserSchema)
+    @blp.arguments(UserSchema)    
     def post(self, new_data):
         """Login a user"""
         user = UserModel.query.filter_by(username=new_data["username"]).first()
@@ -48,10 +49,9 @@ class UserLogin(MethodView):
             return {
                 "access_token": access_token,
                 "refresh_token": refresh_token
-            }, 200
-            
-        else:
-            return {"message": "Invalid credentials"}, 401
+            }            
+        
+        abort(401, message="Invalid username or password")
 
 @blp.route("/refresh")
 class TokenRefresh(MethodView):
