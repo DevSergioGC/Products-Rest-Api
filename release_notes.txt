@@ -9,3 +9,14 @@
 ##Notes
 
 -problems creating a new level
+
+#Path 0.2
+
+##Features
+
+-Enable level endpoint and all it's features
+-Enable login-endpoint (register a user, login a user, refresh a jwt & logout a user)
+
+##Notes
+
+-Only admins users can create new levels on level-endpoint, but everyone who's log-in can see all the levels

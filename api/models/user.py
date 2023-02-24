@@ -7,11 +7,11 @@ class UserModel(db.Model):
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
-    level_id = db.Column(db.Integer, db.ForeignKey("levels.id"), nullable=False, unique=True)
+    level_id = db.Column(db.Integer, db.ForeignKey("levels.id"), nullable=False)
     products = db.relationship('ProductModel', back_populates='users', secondary='product_user')    
     
     @classmethod
-    def find_by_username(cls, id):
+    def find_by_id(cls, id):
         return cls.query.filter_by(id=id).first()
     
     def save_to_db(self):
